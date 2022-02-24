@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Youtube Downloader</title>
+    </head>
+    <style>
+        #main{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(226, 226, 226);
+        }
+        .content{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .content h1{
+            padding: 10px 12px;
+            border-radius: 5px;
+            font-size: 50px;
+            background-image: linear-gradient(red, black);
+            text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px wheat;
+        }
+        #video, #audio{
+            animation: 1s fadein;
+        }
+        #video p, #audio p{
+            font-size: 30px;
+        }
+        label{
+            display: block;
+            width: 100%;
+            font-size: 20px;
+        }
+        input{
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 20px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        button, a{
+            width: 150px;
+            padding: 10px 12px;
+            background-image: linear-gradient(red, rgb(243, 162, 162));
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 30px;
+            border: none;
+            margin: 10px;
+        }
+        a:hover, button:hover{
+            text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px wheat;
+        }
+        @keyframes fadein {
+            from{
+                opacity: 0;
+            }
+            to{
+                opacity: 1;
+            }
+        }
+        #video{
+            display: none;
+        }
+
+        a{
+            margin: 0 auto;
+            display: block;
+            color: black;
+            text-decoration: none;
+        }
+
+    </style>
+    <div id="preload">
+        
+    </div>
+    <body onload="preloader()">
+        <div id="main">
+            <div class="content">
+                <h1>YouTube Downloader</h1>
+                <button onclick="show_audio()">AUDIO</button>
+                <button onclick="show_video()">VIDEO</button>
+                <div id="audio">
+                    <p>Download MP3 audio</p>
+                    <form method="POST" action="download_audio">
+                        {% csrf_token %}
+                        <label>Link of the video</label>
+                        <input type="text" name="link" placeholder="Link Here">
+                        <button type="submit">Get Link</button>
+                    </form>
+                </div>
+
+                <div id="video">
+                    <p>Download 720p Video</p>
+                    <form method="POST" action="download_video">
+                        {% csrf_token %}
+                        <label>Link of the video</label>
+                        <input type="text" name="link" placeholder="Link Here">
+                        <button type="submit">Get Link</button>
+                    </form>
+                </div>
+
+                <p style="display: block; width: 100%;">{{Title}}</p>
+                <p style="display: block; width: 100%;">{{Author}}</p>
+                {% if file is not None %}
+                {% if type == 'Audio' %}
+                <img src="{{thumbnail}}" width="200">
+                <a href="downloads/audio/{{file}}" download>Download</a>
+                {% endif %}
+                {% if type == 'Video' %}
+                <img src="{{thumbnail}}" width="200">
+                <a href="downloads/video/{{file}}" download>Download</a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </body>
+    <script>
+        function preloader(){
+            setTimeout(function(){
+                document.getElementById('main').style.display='block';
+                document.getElementById('preload').style.display='none';
+            },1500)
+        }
+
+        function show_audio(){
+            document.getElementById('audio').style.display='block';
+            document.getElementById('video').style.display='none';
+        }
+
+        function show_video(){
+            document.getElementById('audio').style.display='none';
+            document.getElementById('video').style.display='block';
+        }
+    </script>
+</html>
